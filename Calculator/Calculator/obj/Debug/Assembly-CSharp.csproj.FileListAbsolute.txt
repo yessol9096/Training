@@ -279,3 +279,4 @@ C:\Users\jaeung.shin\Desktop\seongyesol\Training\Calculator\Calculator\obj\Debug
 C:\Users\jaeung.shin\Desktop\seongyesol\Training\Calculator\Calculator\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\jaeung.shin\Desktop\seongyesol\Training\Calculator\Calculator\obj\Debug\Assembly-CSharp.dll
 C:\Users\jaeung.shin\Desktop\seongyesol\Training\Calculator\Calculator\obj\Debug\Assembly-CSharp.pdb
+C:\Users\jaeung.shin\Desktop\seongyesol\Training\Calculator\Calculator\obj\Debug\Assembly-CSharp.csprojAssemblyReference.cache
