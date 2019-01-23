@@ -10,14 +10,15 @@ public class CalculatorMgr : MonoBehaviour
     private Text express;
     // 정수 + 소수 합쳐서 16자리 까지 입력 가능
     // 무조건 정수 다음에 소수 
-    string num1;
-    string num2;
-    string calculate;
+    string num;
+    string s_express;
+    double sum;
+    int digit_limit;
 
-    
-    ArrayList number = new ArrayList();
+    bool input_check = false;
+    bool dot_check = true;
+    List<string> calculate = new List<string> ();
 
-    int order_check = 1;
 
     // Start is called before the first frame update
     void Start()
@@ -25,81 +26,119 @@ public class CalculatorMgr : MonoBehaviour
         result = GameObject.Find("Canvas/Panel/result").GetComponent<Text>();
         express = GameObject.Find("Canvas/Panel/express").GetComponent<Text>();
 
-        Debug.Log(result.text);
-        var a = double.Parse("12345.123");
-        var b = double.Parse("11111.111");
-        //Debug.Log("a + b = " + (a + b));
+        sum = 0;
+        digit_limit = 0;
+
+        PrintResult(sum.ToString());
     }
 
     // Update is called once per frame
     void Update()
     {
+        
     }
 
-	void Input()
+
+    void Calculate(string button, double c_num)
 	{
-		
-	}
+        switch (button)
+        {
+            case "+":
+                sum += c_num;
+                break;
+            case "-":
+                sum -= c_num;
+                break;
+            case "*":
+                sum *= c_num;
+                break;
+            case "/":
+                sum /= c_num;
+                break;
+        }
+        PrintResult(sum.ToString());
+    }
 
-	void Calculate()
-	{
-		
-	}
+    void PrintResult(string input)
+    {
+        result.text = input;
+    }
 
-	void Print()
-	{
-		
-	}
+    void PrintExpress(string input)
+    {
+        s_express += input;
+        express.text = s_express;
+    }
 
-
+    // 숫자 버튼 
 	public void OnClick_Numbutton(string button)
 	{
-        if (order_check == 1)
-            num1 += button;
-        else if (order_check == 2)
-            num2 += button;
+        if (digit_limit < 16)
+        {
+            num += button;
+            input_check = true;
+            PrintResult(num);
+            digit_limit++;
+        }
+    }
 
-        if (order_check == 1)
-            result.text = num1;
-        else if (order_check == 2)
-            result.text = num2;
-        //result.text = num1;
+    // 점은 한 번만 허용
+    public void OnClick_Dotbutton()
+    {
+        if (input_check == true && dot_check == true)
+        {
+            num += ".";
+            dot_check = false;
+            PrintResult(num);
+        }
     }
 
 	public void OnClick_Calculatebutton(string button)
 	{
-        calculate += button;
-        if (order_check == 1)
+        input_check = false;
+        dot_check = true;
+        digit_limit = 0;
+
+        var a = double.Parse(num);
+        int order = calculate.Count;
+
+        if (order == 0)
+            sum = a;
+
+        else 
         {
-            order_check = 2;
-            var a = double.Parse("num1");
-            number.Add(a);
+            Calculate(calculate[order-1], a);
         }
-        else if (order_check == 2)
+
+        if (button != "=")
         {
-            order_check = 3;
-            var b = double.Parse("num2");
-            number.Add(b);
+            PrintExpress(num);
+            num = null;
+            PrintExpress(button);
         }
-        else
-        {
-            switch (button)
-            {
-                case "+":
-                    break;
-                case "-":
-                    break;
-                case "*":
-                    break;
-                case "/":
-                    break;
-            }
-        }
+
+        calculate.Add(button);
+        
     }
 
     public void OnClick_Clearbutton(string button)
     {
+        if (button == "clear" && input_check == true)
+        {
+            num = num.Substring(0, num.Length - 1);
+            PrintResult(num);
+        }
 
+        if (button == "AC")
+        {
+            num = null;
+            sum = 0;
+            s_express = null;
+            PrintResult(sum.ToString());
+            PrintExpress(s_express);
+        }
+      
     }
+
 
 }
