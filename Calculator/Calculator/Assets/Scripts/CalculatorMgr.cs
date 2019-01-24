@@ -17,6 +17,7 @@ public class CalculatorMgr : MonoBehaviour
 
     bool input_check = false;
     bool dot_check = true;
+    bool equal_check = false;
     List<string> calculate = new List<string> ();
 
 
@@ -66,7 +67,10 @@ public class CalculatorMgr : MonoBehaviour
 
     void PrintExpress(string input)
     {
-        s_express += input;
+        if (input == "clear")
+            s_express = null;
+        else
+            s_express += input;
         express.text = s_express;
     }
 
@@ -77,6 +81,7 @@ public class CalculatorMgr : MonoBehaviour
         {
             num += button;
             input_check = true;
+            equal_check = false;
             PrintResult(num);
             digit_limit++;
         }
@@ -102,23 +107,29 @@ public class CalculatorMgr : MonoBehaviour
         var a = double.Parse(num);
         int order = calculate.Count;
 
+        
         if (order == 0)
             sum = a;
-
         else 
-        {
             Calculate(calculate[order-1], a);
-        }
 
-        if (button != "=")
+
+        if (button == "=")
         {
-            PrintExpress(num);
+            PrintExpress("clear");
+            num = sum.ToString();
+            equal_check = true;
+        }
+        else
+        {
+            if (equal_check == true)
+                PrintExpress(sum.ToString());
+            else
+                PrintExpress(num);
             num = null;
             PrintExpress(button);
         }
-
         calculate.Add(button);
-        
     }
 
     public void OnClick_Clearbutton(string button)
@@ -134,6 +145,7 @@ public class CalculatorMgr : MonoBehaviour
             num = null;
             sum = 0;
             s_express = null;
+            calculate.Clear();
             PrintResult(sum.ToString());
             PrintExpress(s_express);
         }
