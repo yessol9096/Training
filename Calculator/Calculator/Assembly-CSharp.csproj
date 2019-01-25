@@ -55,7 +55,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\Scripts\CalculatorMgr.cs" />
+    <Compile Include="Assets\Scripts\GoogleCalculatorMgr.cs" />
+    <Compile Include="Assets\Scripts\WindowCalculatorMgr.cs" />
     <Reference Include="Unity.TextMeshPro.Editor">
       <HintPath>C:/Users/jaeung.shin/Desktop/seongyesol/Training/Calculator/Calculator/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
