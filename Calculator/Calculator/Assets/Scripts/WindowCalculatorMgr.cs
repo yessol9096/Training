@@ -7,12 +7,12 @@ using UnityEngine.UI;
 public class WindowCalculatorMgr : MonoBehaviour
 {
     private Text result;
-    private Text express;
+    private Text expression;
     private Text category;
     // 정수 + 소수 합쳐서 16자리 까지 입력 가능
     // 무조건 정수 다음에 소수
     string num;
-    string s_express;
+    string s_expression;
     double sum;
     int digit_limit;
 
@@ -27,7 +27,7 @@ public class WindowCalculatorMgr : MonoBehaviour
     void Start()
     {
         result = GameObject.Find("Canvas/Window/result").GetComponent<Text>();
-        express = GameObject.Find("Canvas/Window/express").GetComponent<Text>();
+        expression = GameObject.Find("Canvas/Window/expression").GetComponent<Text>();
         category = GameObject.Find("Canvas/Window/category").GetComponent<Text>();
         sum = 0;
         digit_limit = 0;
@@ -66,13 +66,13 @@ public class WindowCalculatorMgr : MonoBehaviour
         result.text = input;
     }
 
-    void PrintExpress(string input)
+    void Printexpression(string input)
     {
         if (input == "clear")
-            s_express = null;
+            s_expression = null;
         else
-            s_express += input;
-        express.text = s_express;
+            s_expression += input;
+        expression.text = s_expression;
     }
 
     // 숫자 버튼 
@@ -117,18 +117,18 @@ public class WindowCalculatorMgr : MonoBehaviour
 
         if (button == "=")
         {
-            PrintExpress("clear");
+            Printexpression("clear");
             num = sum.ToString();
             equal_check = true;
         }
         else
         {
             if (equal_check == true)
-                PrintExpress(sum.ToString());
+                Printexpression(sum.ToString());
             else
-                PrintExpress(num);
+                Printexpression(num);
             num = null;
-            PrintExpress(button);
+            Printexpression(button);
         }
         calculate.Add(button);
     }
@@ -145,10 +145,10 @@ public class WindowCalculatorMgr : MonoBehaviour
         {
             num = null;
             sum = 0;
-            s_express = null;
+            s_expression = null;
             calculate.Clear();
             PrintResult(sum.ToString());
-            PrintExpress(s_express);
+            Printexpression(s_expression);
         }
       
     }

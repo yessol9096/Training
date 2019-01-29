@@ -8,21 +8,21 @@ public class GoogleCalculatorMgr : MonoBehaviour
     private Text result;
     private Text expression;
     private Text category;
-    // 정수 + 소수 합쳐서 16자리 까지 입력 가능
+   
     // 무조건 정수 다음에 소수
-    string num;
+    string s_result;
+    string s_num;
     string s_expression;
+
     double sum;
-    int digit_limit;
+    //int digit_limit;
 
     bool input_check = false;
     bool dot_check = true;
     bool equal_check = false;
 
     List<string> calculate = new List<string>();
-    ArrayList formula = new ArrayList();
-
-    List<int> bracket_order = new List<int>();
+    List<double> number = new List<double>();
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +30,10 @@ public class GoogleCalculatorMgr : MonoBehaviour
         result = GameObject.Find("Canvas/Google/result").GetComponent<Text>();
         expression = GameObject.Find("Canvas/Google/expression").GetComponent<Text>();
         category = GameObject.Find("Canvas/Google/category").GetComponent<Text>();
+
         sum = 0;
-        digit_limit = 0;
+
         category.text = "Google";
-        PrintResult(sum.ToString());
     }
 
     // Update is called once per frame
@@ -42,29 +42,73 @@ public class GoogleCalculatorMgr : MonoBehaviour
 
     }
 
-    void Calculate(string button, double c_num)
+    void Calculate(int index)
     {
-        switch (button)
+        switch (calculate[index])
         {
             case "+":
-                sum += c_num;
+                number[index] += number[index + 1];
                 break;
             case "-":
-                sum -= c_num;
+                number[index] -= number[index + 1];
                 break;
             case "*":
-                sum *= c_num;
+                number[index] *= number[index + 1];
                 break;
             case "/":
-                sum /= c_num;
+                number[index] /= number[index + 1];
                 break;
         }
-        PrintResult(sum.ToString());
+        number.RemoveAt(index + 1);
+        calculate.RemoveAt(index);
+    }
+
+    void Multi_cal(int index)
+    {
+        if (index + 1 < calculate.Count)
+        {
+            if (calculate[index] == "*" || calculate[index] == "/")
+            {
+                Calculate(index);
+                Multi_cal(index);
+            }
+            else
+            {
+                Multi_cal(index++);
+            }
+        }
+    }
+
+    void Plus_cal(int index)
+    {
+        if (0 < calculate.Count && index + 1 < calculate.Count)
+        {
+            if (calculate[index] == "+" || calculate[index] == "-")
+            {
+                Calculate(index);
+                Plus_cal(index);
+            }
+            else
+            {
+                Plus_cal(index++);
+            }
+        }
+    }
+
+    void Calculate()
+    {
+        int count = calculate.Count;
+
+        Multi_cal(0);
+        Plus_cal(0);
+
+        result.text = number[0].ToString();
     }
 
     void PrintResult(string input)
     {
-        result.text = input;
+        s_result += input;
+        result.text = s_result;
     }
 
     void Printexpression(string input)
@@ -73,20 +117,18 @@ public class GoogleCalculatorMgr : MonoBehaviour
             s_expression = null;
         else
             s_expression += input;
+
         expression.text = s_expression;
     }
 
     // 숫자 버튼 
     public void OnClick_Numbutton(string button)
     {
-        if (digit_limit < 16)
-        {
-            num += button;
-            input_check = true;
-            equal_check = false;
-            PrintResult(num);
-            digit_limit++;
-        }
+        input_check = true;
+        equal_check = false;
+
+        s_num += button;
+        PrintResult(button);
     }
 
     // 점은 한 번만 허용
@@ -94,9 +136,9 @@ public class GoogleCalculatorMgr : MonoBehaviour
     {
         if (input_check == true && dot_check == true)
         {
-            num += ".";
+            s_num += ".";
             dot_check = false;
-            PrintResult(num);
+            PrintResult(".");
         }
     }
 
@@ -104,52 +146,49 @@ public class GoogleCalculatorMgr : MonoBehaviour
     {
         input_check = false;
         dot_check = true;
-        digit_limit = 0;
 
-        var a = double.Parse(num);
+        // string to double 
+        var d_num = double.Parse(s_num);
+        number.Add(d_num);
+        s_num = null;
+
+
         int order = calculate.Count;
 
 
-        if (order == 0)
-            sum = a;
-        else
-            Calculate(calculate[order - 1], a);
-
-
+        ////////// = 눌렀을 때 상황 
         if (button == "=")
         {
-            Printexpression("clear");
-            num = sum.ToString();
+            Calculate();
             equal_check = true;
         }
         else
         {
-            if (equal_check == true)
-                Printexpression(sum.ToString());
-            else
-                Printexpression(num);
-            num = null;
-            Printexpression(button);
+            calculate.Add(button);
+            PrintResult(button);
         }
-        calculate.Add(button);
+        ///////////////////////////
     }
 
     public void OnClick_Clearbutton(string button)
     {
-        if (button == "clear" && input_check == true)
+        if (button == "clear")
         {
-            num = num.Substring(0, num.Length - 1);
-            PrintResult(num);
+            s_result = s_result.Substring(0, s_result.Length - 1);
+            PrintResult(null);
         }
 
         if (button == "AC")
         {
-            num = null;
+            s_num = null;
+            s_result = null;
             sum = 0;
             s_expression = null;
+
             calculate.Clear();
-            PrintResult(sum.ToString());
-            Printexpression(s_expression);
+            number.Clear();
+
+            result.text = null;
         }
 
     }
