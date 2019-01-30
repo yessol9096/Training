@@ -5,6 +5,12 @@ using UnityEngine.UI;
 
 public class GoogleCalculatorMgr : MonoBehaviour
 {
+    // 괄호 체크
+    class bracket
+    {
+        public int left;
+        public int right;
+    }
     private Text result;
     private Text expression;
     private Text category;
@@ -14,26 +20,28 @@ public class GoogleCalculatorMgr : MonoBehaviour
     string s_num;
     string s_expression;
 
-    double sum;
+    //double sum;
     //int digit_limit;
 
     bool input_check = false;
     bool dot_check = true;
-    bool equal_check = false;
+    //bool equal_check = false;
 
     List<string> calculate = new List<string>();
     List<double> number = new List<double>();
+    List<bracket> brackets = new List<bracket>();
 
+ 
     // Start is called before the first frame update
     void Start()
     {
         result = GameObject.Find("Canvas/Google/result").GetComponent<Text>();
-        expression = GameObject.Find("Canvas/Google/expression").GetComponent<Text>();
+        expression = GameObject.Find("Canvas/Google/express").GetComponent<Text>();
         category = GameObject.Find("Canvas/Google/category").GetComponent<Text>();
 
-        sum = 0;
-
-        category.text = "Google";
+        //sum = 0;
+        
+        //category.text = "Google";
     }
 
     // Update is called once per frame
@@ -63,44 +71,39 @@ public class GoogleCalculatorMgr : MonoBehaviour
         calculate.RemoveAt(index);
     }
 
-    void Multi_cal(int index)
+    void Multi_cal(int index, int end)
     {
-        if (index + 1 < calculate.Count)
+        if (index < end && index < calculate.Count)
         {
             if (calculate[index] == "*" || calculate[index] == "/")
             {
                 Calculate(index);
-                Multi_cal(index);
+                Multi_cal(index, end);
             }
-            else
+           else
             {
-                Multi_cal(index++);
+                Multi_cal(index+1, end);
             }
         }
     }
 
-    void Plus_cal(int index)
+    void Plus_cal(int index, int end)
     {
-        if (0 < calculate.Count && index + 1 < calculate.Count)
+        if (index < end && index < calculate.Count)
         {
             if (calculate[index] == "+" || calculate[index] == "-")
             {
                 Calculate(index);
-                Plus_cal(index);
-            }
-            else
-            {
-                Plus_cal(index++);
+                Plus_cal(index, end);
             }
         }
     }
 
     void Calculate()
     {
-        int count = calculate.Count;
-
-        Multi_cal(0);
-        Plus_cal(0);
+        
+        Multi_cal(0, calculate.Count);
+        Plus_cal(0, calculate.Count);
 
         result.text = number[0].ToString();
     }
@@ -125,7 +128,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
     public void OnClick_Numbutton(string button)
     {
         input_check = true;
-        equal_check = false;
+        //equal_check = false;
 
         s_num += button;
         PrintResult(button);
@@ -159,8 +162,9 @@ public class GoogleCalculatorMgr : MonoBehaviour
         ////////// = 눌렀을 때 상황 
         if (button == "=")
         {
+            Find_Brackets();
             Calculate();
-            equal_check = true;
+            //equal_check = true;
         }
         else
         {
@@ -182,7 +186,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
         {
             s_num = null;
             s_result = null;
-            sum = 0;
+            //sum = 0;
             s_expression = null;
 
             calculate.Clear();
@@ -195,6 +199,37 @@ public class GoogleCalculatorMgr : MonoBehaviour
 
     public void OnClick_Bracketbutton(string button)
     {
+        bracket temp = null;
+        temp.left = -1;
+        temp.right = -1;
 
+        if (button == "(")
+        {
+            temp.left = number.Count;
+            brackets.Add(temp);
+        }
+        else if (button == ")")
+        {
+            temp.right = number.Count-1;
+            brackets[0].right = temp.right;
+        }
+        
+        Debug.Log(brackets[0].left);
+        Debug.Log(brackets[0].right);
+        PrintResult(button);
+    }
+
+    void Find_Brackets()
+    {
+        if (0 < brackets.Count)
+        {
+            int count = brackets.Count - 1;
+
+            int start = brackets[count].left;
+            int end = brackets[count].right;
+
+            Multi_cal(start, end);
+            Plus_cal(start, end);
+        }
     }
 }

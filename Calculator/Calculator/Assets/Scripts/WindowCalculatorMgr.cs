@@ -27,7 +27,7 @@ public class WindowCalculatorMgr : MonoBehaviour
     void Start()
     {
         result = GameObject.Find("Canvas/Window/result").GetComponent<Text>();
-        expression = GameObject.Find("Canvas/Window/expression").GetComponent<Text>();
+        expression = GameObject.Find("Canvas/Window/express").GetComponent<Text>();
         category = GameObject.Find("Canvas/Window/category").GetComponent<Text>();
         sum = 0;
         digit_limit = 0;
