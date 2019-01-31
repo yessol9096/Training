@@ -8,8 +8,12 @@ public class GoogleCalculatorMgr : MonoBehaviour
     // 괄호 체크
     class bracket
     {
-        public int left;
-        public int right;
+        public int left, right;
+        public bracket(int l, int r)
+        {
+            this.left = l;
+            this.left = r;
+        }
     }
     private Text result;
     private Text expression;
@@ -29,7 +33,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
 
     List<string> calculate = new List<string>();
     List<double> number = new List<double>();
-    List<bracket> brackets = new List<bracket>();
+    bracket brackets = new bracket(-1,-1);
 
  
     // Start is called before the first frame update
@@ -38,10 +42,6 @@ public class GoogleCalculatorMgr : MonoBehaviour
         result = GameObject.Find("Canvas/Google/result").GetComponent<Text>();
         expression = GameObject.Find("Canvas/Google/express").GetComponent<Text>();
         category = GameObject.Find("Canvas/Google/category").GetComponent<Text>();
-
-        //sum = 0;
-        
-        //category.text = "Google";
     }
 
     // Update is called once per frame
@@ -155,7 +155,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
         number.Add(d_num);
         s_num = null;
 
-
+        Debug.Log(number.Count);
         int order = calculate.Count;
 
 
@@ -164,7 +164,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
         {
             Find_Brackets();
             Calculate();
-            //equal_check = true;
+          
         }
         else
         {
@@ -186,7 +186,7 @@ public class GoogleCalculatorMgr : MonoBehaviour
         {
             s_num = null;
             s_result = null;
-            //sum = 0;
+          
             s_expression = null;
 
             calculate.Clear();
@@ -199,37 +199,27 @@ public class GoogleCalculatorMgr : MonoBehaviour
 
     public void OnClick_Bracketbutton(string button)
     {
-        bracket temp = null;
-        temp.left = -1;
-        temp.right = -1;
-
+        //bracket temp = null;
+        
         if (button == "(")
-        {
-            temp.left = number.Count;
-            brackets.Add(temp);
+        { 
+            brackets.left = number.Count;
         }
         else if (button == ")")
         {
-            temp.right = number.Count-1;
-            brackets[0].right = temp.right;
+            brackets.right = number.Count;
+         
         }
-        
-        Debug.Log(brackets[0].left);
-        Debug.Log(brackets[0].right);
         PrintResult(button);
     }
 
     void Find_Brackets()
     {
-        if (0 < brackets.Count)
-        {
-            int count = brackets.Count - 1;
+        int start = brackets.left;
+        int end = brackets.right;
 
-            int start = brackets[count].left;
-            int end = brackets[count].right;
+        Multi_cal(start, end);
+        Plus_cal(start, end);
 
-            Multi_cal(start, end);
-            Plus_cal(start, end);
-        }
     }
 }
