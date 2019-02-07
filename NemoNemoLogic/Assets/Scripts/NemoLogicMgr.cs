@@ -63,7 +63,7 @@ public class NemoLogicMgr : MonoBehaviour
 
         nemo_pan = Instantiate(NemoNemo_Pan, new Vector3(0, 0, 0), Quaternion.identity);
         nemo_pan.transform.SetParent(Panel.transform);
-        nemo_pan.transform.localPosition = new Vector2(0,0);
+        nemo_pan.transform.localPosition = new Vector2(0,-50);
 
         for (int i = 0; i < column_count; ++i)
         {
@@ -100,6 +100,33 @@ public class NemoLogicMgr : MonoBehaviour
 
         Play_NemoNemo();
         Count_NemoNemo();
+        Count_ColumnNemoNemo();
+    }
+
+    public void Create_ColumnCountText(string count, float pos_y, int row_count, int line_count)
+    {
+        Vector2 pos;
+        pos.x = pos_y;
+        pos.y = (row_count * 16) - (15 * line_count);
+
+        GameObject count_text = Instantiate(Count_Text, new Vector3(0, 0, 0), Quaternion.identity);
+
+        count_text.GetComponent<UnityEngine.UI.Text>().text = count;
+        count_text.transform.SetParent(nemo_pan.transform);
+        count_text.transform.localPosition = pos;
+    }
+
+    public void Create_CountText(string count, float pos_y, int row_count, int line_count)
+    {
+        Vector2 pos;
+        pos.y = pos_y;
+        pos.x = -(row_count * 20) + (15 * line_count);
+
+        GameObject count_text = Instantiate(Count_Text, new Vector3(0, 0, 0), Quaternion.identity);
+
+        count_text.GetComponent<UnityEngine.UI.Text>().text = count;
+        count_text.transform.SetParent(nemo_pan.transform);
+        count_text.transform.localPosition = pos;
     }
 
     public void Count_NemoNemo()
@@ -110,40 +137,47 @@ public class NemoLogicMgr : MonoBehaviour
         int column_count = save_pan[0].column;
         int row_count = save_pan[0].row;
         bool condition = true;
+        int line_count = 0;
         int count = 0;
-        List<List<int>> count_num = new List<List<int>>();
+        
 
         for (int i = 0; i < column_count; ++i)
         {
             pos.y = (column_count * 10) - (20 * i);
 
-            List<int> line_count = new List<int>();
-            count = 0;
-
+            check = true;
+            line_count = 0;
             for (int j = 0; j < row_count; ++j)
             {
                 condition = save_pan[0].nemos[i * row_count + j];
                 if (check == false)
                 {
                     if (condition == false)
+                    {
                         count += 1;
+                        if (j == row_count - 1)
+                        {
+                            Create_CountText(count.ToString(), pos.y, row_count, line_count);
+                            line_count += 1;
+                        }
+                    }
                     else
                     {
-                        line_count.Add(count);
-
-                        pos.x = -(row_count * 20) + (10 * line_count.Count);
-
-                        GameObject count_text = Instantiate(Count_Text, new Vector3(0, 0, 0), Quaternion.identity);
-                       
-                        count_text.GetComponent<UnityEngine.UI.Text>().text = count.ToString();
-                        count_text.transform.SetParent(nemo_pan.transform);
-                        count_text.transform.localPosition = pos;
+                        Create_CountText(count.ToString(), pos.y, row_count, line_count);
+                        line_count += 1;
                     }
                 }
                 else
                 {
                     if (condition == false)
+                    {
                         count = 1;
+                        if (j == row_count - 1)
+                        {
+                            Create_CountText(count.ToString(), pos.y, row_count, line_count);
+                            line_count += 1;
+                        }
+                    }
                 }
 
                 if (condition == false)
@@ -151,12 +185,71 @@ public class NemoLogicMgr : MonoBehaviour
                 else
                     check = true;
             }
-            count_num.Add(line_count);
+            
         }
     }
 
-   
-    
+    public void Count_ColumnNemoNemo()
+    {
+        Vector2 pos;
+
+        bool check = true;
+        int column_count = save_pan[0].column;
+        int row_count = save_pan[0].row;
+        bool condition = true;
+        int line_count = 0;
+        int count = 0;
+
+
+        for (int i = 0; i < row_count; ++i)
+        {
+            pos.x = -(row_count * 10) + (20 * i);
+
+            check = true;
+            line_count = 0;
+            for (int j = 0; j < column_count; ++j)
+            {
+                condition = save_pan[0].nemos[j * row_count + i];
+                if (check == false)
+                {
+                    if (condition == false)
+                    {
+                        count += 1;
+                        if (j == column_count - 1)
+                        {
+                            Create_ColumnCountText(count.ToString(), pos.x, column_count, line_count);
+                            line_count += 1;
+                        }
+                    }
+                    else
+                    {
+                        Create_ColumnCountText(count.ToString(), pos.x, column_count, line_count);
+                        line_count += 1;
+                    }
+                }
+                else
+                {
+                    if (condition == false)
+                    {
+                        count = 1;
+                        if (j == column_count - 1)
+                        {
+                            Create_ColumnCountText(count.ToString(), pos.x, column_count, line_count);
+                            line_count += 1;
+                        }
+                    }
+                }
+
+                if (condition == false)
+                    check = false;
+                else
+                    check = true;
+            }
+
+        }
+    }
+
+
     public void Play_NemoNemo()
     {
         Delete_NemoNemo();
