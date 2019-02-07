@@ -3,7 +3,14 @@ guid: 310c9257d2d9b1e43909b055ecb849b9
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - horizon: {instanceID: 0}
+  - vertical: {instanceID: 0}
+  - name: {instanceID: 0}
+  - Nemo: {fileID: 1801770535328760978, guid: 185499aa72d39d94d83c3712d05c429b, type: 3}
+  - Panel: {instanceID: 0}
+  - NemoNemo_Pan: {fileID: 987051517706460727, guid: df866528cb7f5ce44b8c05ee8d39935a,
+      type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
