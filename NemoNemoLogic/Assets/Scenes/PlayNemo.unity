@@ -1144,12 +1144,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 310c9257d2d9b1e43909b055ecb849b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  horizon: {fileID: 0}
-  vertical: {fileID: 0}
-  name: {fileID: 0}
+  horizon: {fileID: 59607583}
+  vertical: {fileID: 1418786273}
+  name: {fileID: 2121760117}
   Nemo: {fileID: 1801770535328760978, guid: 185499aa72d39d94d83c3712d05c429b, type: 3}
-  Panel: {fileID: 0}
   NemoNemo_Pan: {fileID: 987051517706460727, guid: df866528cb7f5ce44b8c05ee8d39935a,
+    type: 3}
+  Count_Text: {fileID: 7982536210021240121, guid: de689979046548f44b4dded004dea304,
     type: 3}
 --- !u!4 &1155878488
 Transform:
@@ -1583,8 +1584,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -124.92, y: 187.8}
-  m_SizeDelta: {x: 137.89, y: 26.77}
+  m_AnchoredPosition: {x: -124.92, y: 186.54}
+  m_SizeDelta: {x: 137.89, y: 29.29}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2004829513
 MonoBehaviour:

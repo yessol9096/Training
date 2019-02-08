@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 
 public class NemoLogicMgr : MonoBehaviour
 {
-
     class save_nemo
     {
         public string name;
@@ -14,7 +14,6 @@ public class NemoLogicMgr : MonoBehaviour
         public int column;
 
         public List<bool> nemos = new List<bool> ();
-
     }
 
     public Text horizon;
@@ -37,10 +36,15 @@ public class NemoLogicMgr : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //DontDestroyOnLoad(gameObject);
+        GameObject.Find("NemoData").GetComponent<NemoData>();
+
         row_count = 0;
         column_count = 0;
 
         Panel = GameObject.Find("Canvas/Panel");
+
+        Debug.Log(Panel);
     }
 
     // Update is called once per frame
@@ -107,7 +111,7 @@ public class NemoLogicMgr : MonoBehaviour
     {
         Vector2 pos;
         pos.x = pos_y;
-        pos.y = (row_count * 16) - (15 * line_count);
+        pos.y = (row_count * 17) - (15 * line_count);
 
         GameObject count_text = Instantiate(Count_Text, new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -120,7 +124,7 @@ public class NemoLogicMgr : MonoBehaviour
     {
         Vector2 pos;
         pos.y = pos_y;
-        pos.x = -(row_count * 20) + (15 * line_count);
+        pos.x = -(row_count * 17) + (15 * line_count);
 
         GameObject count_text = Instantiate(Count_Text, new Vector3(0, 0, 0), Quaternion.identity);
 
@@ -256,5 +260,16 @@ public class NemoLogicMgr : MonoBehaviour
         Create_NemoNemo();
     }
 
+    public void Change_PlayScene()
+    {
+        SceneManager.LoadScene("PlayNemo");
+        Panel = GameObject.Find("Canvas/Panel");
+        Save_NemoNemo();
+    }
+
+    public void Change_CreateScene()
+    {
+        SceneManager.LoadScene("CreateNemo");
+    }
     
 }

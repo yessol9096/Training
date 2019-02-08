@@ -5,7 +5,13 @@ EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
   m_Scenes:
+  - enabled: 0
+    path: 
+    guid: 00000000000000000000000000000000
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
-    guid: 2cda990e2423bbf4892e6590ba056729
+    path: Assets/Scenes/CreateNemo.unity
+    guid: 42305384f09e55841953b533ff1c3f47
+  - enabled: 1
+    path: Assets/Scenes/PlayNemo.unity
+    guid: 0cb67a9b8a7c2f84cbd0c315ce50e394
   m_configObjects: {}
