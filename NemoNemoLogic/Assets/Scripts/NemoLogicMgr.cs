@@ -7,44 +7,40 @@ using UnityEngine.SceneManagement;
 
 public class NemoLogicMgr : MonoBehaviour
 {
-    class save_nemo
-    {
-        public string name;
-        public int row;
-        public int column;
-
-        public List<bool> nemos = new List<bool> ();
-    }
-
     public Text horizon;
     public Text vertical;
-    public Text name;
+    public Text pan_name;
 
     public GameObject Nemo;
     public GameObject NemoNemo_Pan;
     public GameObject Count_Text;
+    public GameObject Answer;
+    public GameObject WrongAnswer;
+
     GameObject Panel;
+
+    private NemoList nemoData;
 
     int row_count;
     int column_count;
+    // 네모리스트 순서
+    int list_index;
 
     GameObject nemo_pan;
 
-    List<save_nemo> save_pan = new List<save_nemo>();
-    
-
+ 
     // Start is called before the first frame update
     void Start()
     {
-        //DontDestroyOnLoad(gameObject);
-        GameObject.Find("NemoData").GetComponent<NemoData>();
-
+        nemoData = GameObject.Find("NemoData").GetComponent<NemoList>();
+        
         row_count = 0;
         column_count = 0;
-
+        list_index = 0;
         Panel = GameObject.Find("Canvas/Panel");
 
-        Debug.Log(Panel);
+        if (SceneManager.GetActiveScene().name == "PlayNemo")
+            Play_NemoNemo();
     }
 
     // Update is called once per frame
@@ -58,10 +54,10 @@ public class NemoLogicMgr : MonoBehaviour
         Destroy(nemo_pan);
     }
 
-    public void Create_NemoNemo()
+    public void Create_NemoNemo(int row, int column)
     {
-        row_count = int.Parse(horizon.text);
-        column_count = int.Parse(vertical.text);
+        row_count = row;
+        column_count = column;
 
         Vector2 pos;
 
@@ -77,34 +73,31 @@ public class NemoLogicMgr : MonoBehaviour
             {
                 pos.x = -(row_count*10) + (20 * j);
 
-                GameObject go = Instantiate(Nemo, new Vector3(0,0,0), Quaternion.identity);
-                go.name = i.ToString() + j.ToString();
-                go.transform.SetParent(nemo_pan.transform);
-                go.transform.localPosition = pos;
+                GameObject nemo = Instantiate(Nemo, new Vector3(0,0,0), Quaternion.identity);
+                nemo.name = i.ToString() + j.ToString();
+                nemo.transform.SetParent(nemo_pan.transform);
+                nemo.transform.localPosition = pos;
             }
         }
     }
 
     public void Save_NemoNemo()
     {
-        save_nemo temp_save = new save_nemo();
-
-        temp_save.name = name.ToString();
-        temp_save.row = row_count;
-        temp_save.column = column_count;
+        nemoData.SetName(pan_name.text.ToString());
+        nemoData.SetRow(row_count);
+        nemoData.SetColumn(column_count);       
         
         for (int i = 0; i < column_count; ++i)
         {
             for (int j = 0; j < row_count; ++j)
             {
-                temp_save.nemos.Add(GameObject.Find(i.ToString() + j.ToString()).GetComponent<UnityEngine.UI.Toggle>().isOn);
+                nemoData.AddNemo(GameObject.Find(i.ToString() + j.ToString()).GetComponent<UnityEngine.UI.Toggle>().isOn);
             }
         }
-        save_pan.Add(temp_save);
 
-        Play_NemoNemo();
-        Count_NemoNemo();
-        Count_ColumnNemoNemo();
+        nemoData.AddList();
+
+
     }
 
     public void Create_ColumnCountText(string count, float pos_y, int row_count, int line_count)
@@ -138,8 +131,8 @@ public class NemoLogicMgr : MonoBehaviour
         Vector2 pos;
 
         bool check = true;
-        int column_count = save_pan[0].column;
-        int row_count = save_pan[0].row;
+        int row_count = nemoData.GetRow(list_index);
+        int column_count = nemoData.GetColumn(list_index);
         bool condition = true;
         int line_count = 0;
         int count = 0;
@@ -153,7 +146,7 @@ public class NemoLogicMgr : MonoBehaviour
             line_count = 0;
             for (int j = 0; j < row_count; ++j)
             {
-                condition = save_pan[0].nemos[i * row_count + j];
+                condition = nemoData.GetNemos(list_index, i * row_count + j);
                 if (check == false)
                 {
                     if (condition == false)
@@ -198,8 +191,8 @@ public class NemoLogicMgr : MonoBehaviour
         Vector2 pos;
 
         bool check = true;
-        int column_count = save_pan[0].column;
-        int row_count = save_pan[0].row;
+        int row_count = nemoData.GetRow(list_index);
+        int column_count = nemoData.GetColumn(list_index);
         bool condition = true;
         int line_count = 0;
         int count = 0;
@@ -213,7 +206,8 @@ public class NemoLogicMgr : MonoBehaviour
             line_count = 0;
             for (int j = 0; j < column_count; ++j)
             {
-                condition = save_pan[0].nemos[j * row_count + i];
+                condition = nemoData.GetNemos(list_index, j * row_count + i);
+
                 if (check == false)
                 {
                     if (condition == false)
@@ -253,23 +247,66 @@ public class NemoLogicMgr : MonoBehaviour
         }
     }
 
+    public void Click_CreateButton()
+    {
+        Create_NemoNemo(int.Parse(horizon.text), int.Parse(vertical.text));
+    }
 
     public void Play_NemoNemo()
     {
         Delete_NemoNemo();
-        Create_NemoNemo();
+        Create_NemoNemo(nemoData.GetRow(list_index), nemoData.GetColumn(list_index));
+        Count_NemoNemo();
+        Count_ColumnNemoNemo();
+    }
+
+    public void Check_NemoNemo()
+    {
+        bool check = true;
+        for (int i = 0; i < column_count; ++i)
+        {
+            for (int j = 0; j < row_count; ++j)
+            {
+                if(GameObject.Find(i.ToString() + j.ToString()).GetComponent<UnityEngine.UI.Toggle>().isOn != nemoData.GetNemos(list_index, i * row_count + j))
+                {
+                    check = false;
+                    goto ExitGUIException;
+                }
+            }
+        }
+        if (check == true)
+        {
+            GameObject answer = Instantiate(Answer, new Vector3(0, 0, 0), Quaternion.identity);
+            answer.transform.SetParent(nemo_pan.transform);
+            answer.transform.localPosition = new Vector3(0, 0, 0);
+            //Debug.Log("맞혔습니다.");
+        }
+
+    ExitGUIException:
+        if (check == false)
+        {
+            GameObject wrong_answer = Instantiate(WrongAnswer, new Vector3(0, 0, 0), Quaternion.identity);
+            wrong_answer.transform.SetParent(nemo_pan.transform);
+            wrong_answer.transform.localPosition = new Vector3(0, 0, 0);
+            //Debug.Log("틀렸습니다.");
+        }
     }
 
     public void Change_PlayScene()
     {
-        SceneManager.LoadScene("PlayNemo");
-        Panel = GameObject.Find("Canvas/Panel");
         Save_NemoNemo();
+        SceneManager.LoadScene("PlayNemo");
     }
 
     public void Change_CreateScene()
     {
         SceneManager.LoadScene("CreateNemo");
     }
+
+    public void Change_ListScene()
+    {
+        SceneManager.LoadScene("List");
+    }
+
     
 }

@@ -508,12 +508,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   horizon: {fileID: 973201084}
   vertical: {fileID: 373797791}
-  name: {fileID: 670550965}
+  pan_name: {fileID: 670550965}
   Nemo: {fileID: 1801770535328760978, guid: 185499aa72d39d94d83c3712d05c429b, type: 3}
   NemoNemo_Pan: {fileID: 987051517706460727, guid: df866528cb7f5ce44b8c05ee8d39935a,
     type: 3}
   Count_Text: {fileID: 7982536210021240121, guid: de689979046548f44b4dded004dea304,
     type: 3}
+  Answer: {fileID: 0}
+  WrongAnswer: {fileID: 0}
 --- !u!4 &243625854
 Transform:
   m_ObjectHideFlags: 0
@@ -766,7 +768,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 243625853}
-        m_MethodName: Create_NemoNemo
+        m_MethodName: Click_CreateButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1002,7 +1004,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 614058114}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 32e471a6819248642addf323545f2d11, type: 3}
+  m_Script: {fileID: 11500000, guid: 110da28f86af97c4c93a4046537a24dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!4 &614058116
@@ -1517,7 +1519,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 243625853}
-        m_MethodName: Save_NemoNemo
+        m_MethodName: Change_PlayScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
