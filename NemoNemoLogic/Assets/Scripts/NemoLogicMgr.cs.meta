@@ -6,11 +6,15 @@ MonoImporter:
   defaultReferences:
   - horizon: {instanceID: 0}
   - vertical: {instanceID: 0}
-  - name: {instanceID: 0}
+  - pan_name: {instanceID: 0}
   - Nemo: {fileID: 1801770535328760978, guid: 185499aa72d39d94d83c3712d05c429b, type: 3}
   - NemoNemo_Pan: {fileID: 987051517706460727, guid: df866528cb7f5ce44b8c05ee8d39935a,
       type: 3}
   - Count_Text: {fileID: 7982536210021240121, guid: de689979046548f44b4dded004dea304,
+      type: 3}
+  - Answer: {fileID: 6313867077458690050, guid: b94a51304812dff4ab32029d27b86aa1,
+      type: 3}
+  - WrongAnswer: {fileID: 809208016747250563, guid: a6f828464a762b74096b27ba85b0a9b8,
       type: 3}
   executionOrder: 0
   icon: {instanceID: 0}

@@ -20,6 +20,7 @@ public class NemoLogicMgr : MonoBehaviour
     GameObject Panel;
 
     private NemoList nemoData;
+    private NemoData tempData;
 
     int row_count;
     int column_count;
@@ -33,7 +34,8 @@ public class NemoLogicMgr : MonoBehaviour
     void Start()
     {
         nemoData = GameObject.Find("NemoData").GetComponent<NemoList>();
-        
+        //tempData = GameObject.Find("NemoData").GetComponent<NemoData>();
+        tempData = new NemoData();
         row_count = 0;
         column_count = 0;
         list_index = 0;
@@ -83,20 +85,19 @@ public class NemoLogicMgr : MonoBehaviour
 
     public void Save_NemoNemo()
     {
-        nemoData.SetName(pan_name.text.ToString());
-        nemoData.SetRow(row_count);
-        nemoData.SetColumn(column_count);       
-        
+        tempData.name = pan_name.text.ToString();
+        tempData.row = row_count;
+        tempData.column = column_count;
+
         for (int i = 0; i < column_count; ++i)
         {
             for (int j = 0; j < row_count; ++j)
             {
-                nemoData.AddNemo(GameObject.Find(i.ToString() + j.ToString()).GetComponent<UnityEngine.UI.Toggle>().isOn);
+                tempData.nemos.Add(GameObject.Find(i.ToString() + j.ToString()).GetComponent<UnityEngine.UI.Toggle>().isOn);
             }
         }
 
-        nemoData.AddList();
-
+        nemoData.AddList(tempData);
 
     }
 

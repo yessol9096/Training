@@ -4,13 +4,11 @@ using UnityEngine;
 
 public class NemoList : MonoBehaviour
 {
-    NemoData temp = new NemoData();
     public List<NemoData> nemoData = new List<NemoData>();
 
     // Start is called before the first frame update
     void Start()
     {
-        //temp = new NemoData();
         DontDestroyOnLoad(gameObject);
     }
 
@@ -20,30 +18,10 @@ public class NemoList : MonoBehaviour
 
     }
     
-    public void SetName(string n)
-    {
-        temp.name = n;
-    }
 
-    public void SetRow(int r)
-    {
-        temp.row = r;
-    }
-
-    public void SetColumn(int c)
-    {
-        temp.column = c;
-    }
-
-    public void AddNemo(bool b)
-    {
-        temp.nemos.Add(b);
-    }
-
-    public void AddList()
+    public void AddList(NemoData temp)
     {
         nemoData.Add(temp);
-        temp = null;
     }
 
     //////
